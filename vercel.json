@@ -1,0 +1,8 @@
+{
+  "functions": { "api/index.js": { "includeFiles": "private/**" } },
+  "rewrites": [
+    { "source": "/api/:path*", "destination": "/api/index.js?__p=/api/:path*" },
+    { "source": "/admin", "destination": "/api/index.js?__p=/admin" },
+    { "source": "/admin/:path*", "destination": "/api/index.js?__p=/admin/:path*" }
+  ]
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>پنل مدیریت | پیرایش سیلور</title>
+<style>
+:root{--ink:#0b0e13;--steel:#161b24;--steel2:#1f2632;--chrome:#e4e9f0;--mute:#8d97a6;--ice:#7fd4ff;--red:#e5384c;--green:#3ddc97}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Vazirmatn,Tahoma,sans-serif;background:var(--ink);color:var(--chrome);min-height:100vh}
+button,input,select{font:inherit}
+.login{min-height:100vh;display:grid;place-items:center;padding:20px}
+.lbox{width:100%;max-width:360px;background:var(--steel);border:1px solid #ffffff14;border-radius:22px;padding:34px;animation:in .6s both}
+@keyframes in{from{opacity:0;transform:translateY(24px)}}
+h1{font-size:1.5rem;margin-bottom:20px;text-align:center}
+input,select{width:100%;background:var(--ink);color:var(--chrome);border:1px solid #ffffff22;border-radius:12px;padding:12px 14px;margin-bottom:12px;outline:0}
+input:focus,select:focus{border-color:var(--ice)}
+.btn{border:0;cursor:pointer;border-radius:12px;padding:11px 18px;font-weight:800;background:linear-gradient(120deg,#cfd6e0,#fff,#aeb8c7);color:#071018}
+.btn.s{padding:6px 12px;font-size:.82rem;font-weight:500;background:var(--steel2);color:var(--chrome);border:1px solid #ffffff1c}
+.btn.s:hover{border-color:var(--ice)}.btn.d:hover{border-color:var(--red);color:var(--red)}
+#err{color:var(--red);text-align:center;min-height:24px;font-size:.9rem}
+#app{display:none;max-width:1100px;margin:auto;padding:24px 16px}
+header{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px;flex-wrap:wrap;gap:10px}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.tools input,.tools select{width:auto;margin:0;min-width:150px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:18px}
+.st{background:var(--steel);border-radius:16px;padding:14px 18px;border:1px solid #ffffff10}.st b{font-size:1.8rem;display:block}.st span{color:var(--mute);font-size:.85rem}
+.wrap{overflow-x:auto;background:var(--steel);border-radius:18px;border:1px solid #ffffff10}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:12px 14px;text-align:right;border-bottom:1px solid #ffffff0d;font-size:.92rem}
+th{color:var(--mute);font-weight:500}
+tr{animation:in .4s both}tr:hover td{background:#ffffff06}
+.tag{padding:2px 10px;border-radius:20px;font-size:.78rem}
+.active{background:#7fd4ff22;color:var(--ice)}.done{background:#3ddc9722;color:var(--green)}.canceled{background:#e5384c22;color:var(--red)}
+.empty{padding:40px;text-align:center;color:var(--mute)}
+.rev{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.rc{background:linear-gradient(150deg,#1f2a3a,var(--steel));border:1px solid #7fd4ff33;border-radius:18px;padding:16px 20px}
+.rc span{color:var(--mute);font-size:.9rem;display:block}.rc b{font-size:1.9rem;color:var(--green);margin-inline-end:6px}
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:6px 0 12px}
+.cp{padding:9px 2px;border-radius:10px;border:1px solid #ffffff22;background:var(--ink);color:var(--chrome);cursor:pointer;text-align:center;font-size:.92rem;position:relative}
+.cp:hover{border-color:var(--ice)}.cp.on{background:var(--red);border-color:var(--red);color:#fff;font-weight:800}
+.cp.all{grid-column:1/-1;padding:11px}.cp.dim{opacity:.35;pointer-events:none}
+.cp i{position:absolute;top:4px;left:5px;width:6px;height:6px;border-radius:50%;background:var(--ice)}
+.cli{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #ffffff0d;font-size:.9rem}
+small{color:var(--mute)}
+.modal{position:fixed;inset:0;background:#000a;display:none;align-items:center;justify-content:center;padding:16px;z-index:50}
+.mbox{width:100%;max-width:420px;background:var(--steel);border:1px solid #ffffff1c;border-radius:20px;padding:26px;animation:in .3s both}
+.mbox label{display:block;color:var(--mute);font-size:.85rem;margin-bottom:4px}
+.mrow{display:flex;gap:10px}.mrow>div{flex:1}
+@media(max-width:700px){
+#app{padding:16px 12px}h1{font-size:1.2rem}
+.lbox{padding:24px}
+input,select{font-size:16px}
+.tools input,.tools select{flex:1 1 100%;min-width:0}
+.tools .btn{flex:1}
+.rev{gap:8px}.rc{padding:12px 14px}.rc b{font-size:1.35rem}.stats{grid-template-columns:repeat(3,1fr);gap:8px}.st{padding:10px 12px}.st b{font-size:1.4rem}.st span{font-size:.75rem}
+table{min-width:0}thead{display:none}
+table,tbody,tr,td{display:block;width:100%}
+tr{padding:12px 14px;border-bottom:1px solid #ffffff14}
+td{border:0;padding:4px 0;display:flex;justify-content:space-between;align-items:center;gap:10px;text-align:left}
+td::before{color:var(--mute);font-size:.82rem}
+td:nth-child(1)::before{content:"تاریخ"}td:nth-child(2)::before{content:"ساعت"}td:nth-child(3)::before{content:"نام"}
+td:nth-child(4)::before{content:"موبایل"}td:nth-child(5)::before{content:"وضعیت"}td:nth-child(6)::before{content:"IP"}
+td:nth-child(7){margin-top:8px;flex-wrap:wrap;white-space:normal!important}
+td:nth-child(7) .btn.s{flex:1;padding:10px 8px}
+tr:hover td{background:none}
+}
+</style>
+</head>
+<body>
+<div class="login" id="login"><form class="lbox" onsubmit="return login(event)">
+  <h1>ورود به پنل مدیریت</h1>
+  <input id="u" placeholder="نام کاربری" autocomplete="username" required>
+  <input id="p" type="password" placeholder="رمز عبور" autocomplete="current-password" required>
+  <div id="err"></div><button class="btn" style="width:100%">ورود</button>
+</form></div>
+
+<div id="app">
+  <header><h1 style="margin:0">پیرایش سیلور · نوبت‌ها</h1><button class="btn s" onclick="logout()">خروج</button></header>
+  <div class="rev"><div class="rc"><span>دریافتی امروز</span><b id="r1">۰</b><small>تومان</small></div><div class="rc"><span id="rml">دریافتی این ماه</span><b id="r2">۰</b><small>تومان</small></div></div>
+  <div class="stats"><div class="st"><b id="s1">0</b><span>نوبت امروز</span></div><div class="st"><b id="s2">0</b><span>نوبت فعال آینده</span></div><div class="st"><b id="s3">0</b><span>کل نوبت‌ها</span></div></div>
+  <div class="tools">
+    <select id="fd" onchange="render()"><option value="">همه روزها</option></select><select id="fs" onchange="render()"><option value="">همه وضعیت‌ها</option><option value="active">فعال</option><option value="done">انجام‌شده</option><option value="canceled">لغو شده</option></select>
+    <input id="q" placeholder="جستجوی نام یا شماره" oninput="render()"><button class="btn s" onclick="clr()">پاک کردن فیلتر</button><button class="btn s" onclick="load()">بروزرسانی</button><button class="btn" style="padding:7px 16px" onclick="openAdd()">+ افزودن دستی نوبت</button><button class="btn s d" onclick="openCl()">تعطیلی دستی</button>
+  </div>
+  <div class="wrap"><table><thead><tr><th>تاریخ نوبت</th><th>ساعت</th><th>نام</th><th>موبایل</th><th>وضعیت</th><th>IP / منبع</th><th>عملیات</th></tr></thead><tbody id="tb"></tbody></table><div class="empty" id="em" style="display:none">نوبتی پیدا نشد.</div></div>
+</div>
+
+<div class="modal" id="modal" onclick="if(event.target===this)closeAdd()"><form class="mbox" onsubmit="return addManual(event)">
+  <h1 style="margin-bottom:16px">افزودن دستی نوبت</h1>
+  <label>نام مشتری (اختیاری)</label><input id="an" maxlength="60" placeholder="اگر خالی بماند «مشتری» ثبت می‌شود">
+  <label>شماره موبایل (اختیاری)</label><input id="ap" maxlength="11" inputmode="numeric" dir="ltr" placeholder="09123456789" style="text-align:right">
+  <div class="mrow"><div><label>روز</label><select id="ad" onchange="slotsLoad()"></select></div><div><label>ساعت</label><select id="at"></select></div></div>
+  <div id="aerr" style="color:var(--red);min-height:24px;font-size:.9rem"></div>
+  <div class="mrow"><button class="btn" style="flex:1">ثبت نوبت</button><button type="button" class="btn s" style="padding:11px 18px" onclick="closeAdd()">انصراف</button></div>
+</form></div>
+<div class="modal" id="pay" onclick="if(event.target===this)closePay()"><form class="mbox" onsubmit="return savePay(event)">
+  <h1 style="margin-bottom:6px">مبلغ دریافتی</h1><p id="pn" style="text-align:center;color:var(--mute);margin-bottom:16px"></p>
+  <label>مبلغ (تومان)</label><input id="pa" inputmode="numeric" dir="ltr" placeholder="مثلاً 150,000" style="text-align:right;font-size:18px" autocomplete="off">
+  <div id="pe" style="color:var(--red);min-height:24px;font-size:.9rem"></div>
+  <div class="mrow"><button class="btn" style="flex:1">ثبت و انجام شد</button><button type="button" class="btn s" style="padding:11px 18px" onclick="closePay()">انصراف</button></div>
+</form></div>
+<div class="modal" id="cl" onclick="if(event.target===this)closeCl()"><div class="mbox" style="max-width:540px;max-height:92vh;overflow:auto">
+  <h1 style="margin-bottom:14px">تعطیلی دستی</h1>
+  <label>روز</label><select id="cd" onchange="clSel=new Set();clAll=false;renderCl()"></select>
+  <div id="cn" style="color:#f0b34a;font-size:.88rem;margin:-4px 0 10px;min-height:0"></div>
+  <label>ساعت (می‌توانی چند ساعت انتخاب کنی)</label><div class="cg" id="cc"></div>
+  <div id="cerr" style="min-height:24px;font-size:.9rem"></div>
+  <div class="mrow"><button class="btn" style="flex:1" onclick="addCl()">ثبت تعطیلی</button><button class="btn s" style="padding:11px 18px" onclick="closeCl()">بستن</button></div>
+  <h3 style="margin:22px 0 6px;font-size:1rem">تعطیلی‌های ثبت‌شده</h3><div id="cll"></div>
+</div></div>
+<script>
+const $=s=>document.querySelector(s);let all=[],today='',rv={t:0,m:0},payId=null,HL={};
+const fa=s=>String(s).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const jd=d=>new Date(d+'T12:00:00').toLocaleDateString('fa-IR',{weekday:'long',day:'numeric',month:'long'});
+const hl=n=>n.includes('احتمالی')?n:n+' (تعطیل رسمی)';
+const lab={active:'فعال',done:'انجام شد',canceled:'لغو شده'};
+async function api(u,m='GET',b){const r=await fetch('/admin/api/'+u,{method:m,headers:{'Content-Type':'application/json'},body:b?JSON.stringify(b):undefined});if(r.status===401&&u!=='login'){show(false);throw 0}return r}
+function show(on){$('#login').style.display=on?'none':'grid';$('#app').style.display=on?'block':'none'}
+async function login(e){e.preventDefault();const r=await api('login','POST',{user:$('#u').value,pass:$('#p').value});const j=await r.json();
+ if(r.ok){$('#err').textContent='';$('#p').value='';show(true);load()}else $('#err').textContent=j.error;return false}
+async function logout(){await api('logout','POST');show(false)}
+async function load(){const r=await api('bookings');const j=await r.json();all=j.bookings;today=j.today;rv={t:j.revenueToday,m:j.revenueMonth};HL=j.holidays||{};fillDates();render()}
+function fillDates(){const cur=$('#fd').value,ds=[...new Set(all.map(b=>b.date))].sort();
+ $('#fd').innerHTML='<option value="">همه روزها</option>'+ds.map(d=>`<option value="${d}">${jd(d)}${HL[d]?' · '+HL[d]:''}</option>`).join('');$('#fd').value=ds.includes(cur)?cur:''}
+function clr(){$('#fd').value='';$('#fs').value='';$('#q').value='';render()}
+function render(){
+ const fd=$('#fd').value,fs=$('#fs').value,q=$('#q').value.trim();
+ $('#r1').textContent=fa((rv.t||0).toLocaleString('en-US'));$('#r2').textContent=fa((rv.m||0).toLocaleString('en-US'));$('#rml').textContent='دریافتی '+new Date().toLocaleDateString('fa-IR',{month:'long'});
+ $('#s1').textContent=fa(all.filter(b=>b.date===today&&b.status!=='canceled').length);
+ $('#s2').textContent=fa(all.filter(b=>b.date>=today&&b.status==='active').length);$('#s3').textContent=fa(all.length);
+ const l=all.filter(b=>(!fd||b.date===fd)&&(!fs||b.status===fs)&&(!q||b.name.includes(q)||b.phone.includes(q)));
+ $('#em').style.display=l.length?'none':'block';
+ $('#tb').innerHTML=l.map((b,i)=>`<tr style="animation-delay:${Math.min(i,15)*30}ms"><td>${jd(b.date)}${b.date===today?' <small>(امروز)</small>':''}${HL[b.date]?`<br><small style="color:#f0b34a">${hl(HL[b.date])}</small>`:''}</td><td>${fa(b.time)}</td><td>${esc(b.name)}</td><td dir="ltr" style="text-align:right">${b.phone?`<a href="tel:${b.phone}" style="color:var(--ice)">${b.phone}</a>`:'<small>—</small>'}</td><td><span class="tag ${b.status}">${lab[b.status]}</span>${b.status==='done'?` <small>${fa((b.paid||0).toLocaleString('en-US'))} تومان</small>`:''}</td><td>${b.manual?'<span class="tag active">حضوری</span>':`<small dir="ltr">${esc(b.ip)}</small>`}</td>
+ <td style="white-space:nowrap"><button class="btn s" onclick="openPay('${b.id}')">انجام شد</button> <button class="btn s" onclick="st('${b.id}','canceled')">لغو</button> <button class="btn s d" onclick="del('${b.id}')">حذف</button></td></tr>`).join('')}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let CL={days:[],slots:[],list:[]},clAll=false,clSel=new Set();
+async function openCl(){await loadCl();$('#cerr').textContent='';$('#cl').style.display='flex'}
+function closeCl(){$('#cl').style.display='none'}
+async function loadCl(){const j=await (await api('closures')).json();CL={days:j.days,slots:j.slots,list:j.closures};
+ const keep=$('#cd').value;$('#cd').innerHTML=CL.days.map(d=>`<option value="${d.date}">${jd(d.date)}${d.weekly?' (تعطیل هفتگی)':''}${d.holiday?' · '+hl(d.holiday):''}</option>`).join('');if(keep)$('#cd').value=keep;renderCl()}
+function renderCl(){const d=$('#cd').value;const dd=CL.days.find(x=>x.date===d);$('#cn').textContent=dd&&dd.holiday?(dd.holiday.includes('احتمالی')?'این روز احتمالاً تعطیل رسمی است (تاریخ هنوز قطعی نیست): ':'این روز تعطیل رسمی است: ')+dd.holiday.replace(' (احتمالی)','')+'. برای بستن رزرو، «کل روز» را بزن.':'';
+ $('#cc').innerHTML=`<div class="cp all ${clAll?'on':''}" onclick="clAll=!clAll;renderCl()">کل روز (مثل جمعه‌ها)</div>`+CL.slots.map(t=>{const bk=all.some(b=>b.date===d&&b.time===t&&b.status==='active');
+  return `<div class="cp ${clSel.has(t)?'on':''} ${clAll?'dim':''}" onclick="clSel.has('${t}')?clSel.delete('${t}'):clSel.add('${t}');renderCl()">${fa(t)}${bk?'<i title="نوبت فعال دارد"></i>':''}</div>`}).join('');
+ $('#cll').innerHTML=CL.list.length?CL.list.map(c=>`<div class="cli"><span>${jd(c.date)} · ${c.all?'<b>کل روز</b>':c.times.map(fa).join('، ')}</span><button class="btn s d" onclick="delCl('${c.id}')">حذف</button></div>`).join(''):'<small>تعطیلی‌ای ثبت نشده.</small>'}
+async function addCl(){const e=$('#cerr');e.style.color='var(--red)';
+ if(!clAll&&!clSel.size){e.textContent='کل روز یا حداقل یک ساعت را انتخاب کن.';return}
+ const r=await api('closures','POST',{date:$('#cd').value,all:clAll,times:[...clSel]});const j=await r.json();
+ if(!r.ok){e.textContent=j.error;return}
+ clAll=false;clSel=new Set();await loadCl();
+ if(j.conflicts&&j.conflicts.length){e.style.color='#f0b34a';e.textContent='ثبت شد، ولی این نوبت‌های فعال در همین بازه هستند و باید لغو یا هماهنگ شوند: '+j.conflicts.map(c=>fa(c.time)+' '+c.name+(c.phone?' ('+c.phone+')':'')).join('، ')}
+ else{e.style.color='var(--green)';e.textContent='تعطیلی ثبت شد.'}}
+async function delCl(id){if(!confirm('این تعطیلی برداشته شود؟'))return;await api('closures/'+id,'DELETE');await loadCl()}
+let DAYS=null,SL=[];
+async function openAdd(){
+ if(!DAYS){const r=await (await fetch('/api/days')).json();DAYS=r.days;SL=r.slots}
+ $('#ad').innerHTML=DAYS.map(d=>`<option value="${d.date}">${jd(d.date)}${d.holiday?' · '+hl(d.holiday):''}${d.open?'':' (تعطیل)'}</option>`).join('');
+ $('#an').value='';$('#ap').value='';$('#aerr').textContent='';$('#modal').style.display='flex';await slotsLoad();$('#an').focus()}
+function closeAdd(){$('#modal').style.display='none'}
+async function slotsLoad(){
+ const {taken,closed}=await (await fetch('/api/taken?date='+$('#ad').value)).json();
+ $('#at').innerHTML=SL.map(t=>`<option value="${t}" ${taken.includes(t)?'disabled':''}>${fa(t)}${closed.includes(t)?' (تعطیل)':taken.includes(t)?' (پر)':''}</option>`).join('');
+ const f=[...$('#at').options].find(o=>!o.disabled);if(f)$('#at').value=f.value}
+async function addManual(e){e.preventDefault();
+ const r=await api('bookings','POST',{name:$('#an').value,phone:$('#ap').value,date:$('#ad').value,time:$('#at').value});const j=await r.json();
+ if(r.ok){closeAdd();load()}else{$('#aerr').textContent=j.error;slotsLoad()}return false}
+function openPay(id){const b=all.find(x=>x.id===id);if(!b)return;payId=id;$('#pn').textContent=b.name+' · '+fa(b.time);$('#pa').value=b.paid?b.paid.toLocaleString('en-US'):'';$('#pe').textContent='';$('#pay').style.display='flex';$('#pa').focus()}
+function closePay(){$('#pay').style.display='none'}
+$('#pa').addEventListener('input',e=>{const d=e.target.value.replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c)).replace(/\D/g,'');e.target.value=d?(+d).toLocaleString('en-US'):''});
+async function savePay(e){e.preventDefault();const r=await api('bookings/'+payId,'PATCH',{status:'done',paid:$('#pa').value});
+ if(r.ok){closePay();load()}else $('#pe').textContent=(await r.json()).error||'خطا';return false}
+async function st(id,s){await api('bookings/'+id,'PATCH',{status:s});load()}
+async function del(id){if(confirm('این نوبت برای همیشه حذف شود؟')){await api('bookings/'+id,'DELETE');load()}}
+(async()=>{try{await load();show(true)}catch{}})();
+</script>
+</body>
+</html>
