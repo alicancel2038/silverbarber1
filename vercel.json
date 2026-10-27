@@ -1,4 +1,5 @@
 {
+  "regions": ["fra1"],
   "functions": { "api/index.js": { "includeFiles": "private/**" } },
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/index.js?__p=/api/:path*" },
