@@ -15,8 +15,10 @@ const CLOSED_WEEKDAYS = [5];
 const CLOSE_ON_OFFICIAL_HOLIDAYS = false;
 /* ================================== */
 
-const RURL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-const RTOK = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+// آدرس و توکن دیتابیس: با هر پیشوندی که Vercel بگذارد (مثلاً STORAGE_KV_REST_API_URL) پیدا می‌شود
+const envFind = re => { const k = Object.keys(process.env).find(x => re.test(x) && !/READ_ONLY/.test(x) && process.env[x]); return k ? process.env[k] : undefined; };
+const RURL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL || envFind(/(REST_API_URL|REDIS_REST_URL)$/);
+const RTOK = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || envFind(/(REST_API_TOKEN|REDIS_REST_TOKEN)$/);
 async function rcall(p, payload) {
   if (!RURL || !RTOK) throw new Error('REDIS_NOT_CONFIGURED');
   const r = await fetch(RURL + p, { method: 'POST', headers: { Authorization: 'Bearer ' + RTOK, 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
